@@ -1,4 +1,4 @@
-import { ValidationError } from "../errors/error-handling.js";
+import { ValidationError } from "../console/error-handling.js";
 import {
   createAccountSchema,
   emailSchema,

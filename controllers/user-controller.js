@@ -3,12 +3,12 @@ import {
   ConflictError,
   InternalServerError,
   ValidationError,
-} from "../errors/error-handling.js";
+} from "../console/error-handling.js";
 import { insertNewUser, selectUserByEmail } from "../queries/user-queries.js";
 import { emailSchema } from "../validation/user-schemas.js";
 import bcrypt from "bcrypt";
 
-//  --------------------  VALIDATE EMAIL TO REDIRECT TO LOGIN OR REGISTER  --------------------  //
+//  --------------------  VALIDATE EMAIL TO REDIRECT USER TO LOGIN OR REGISTER  --------------------  //
 
 export const verifyEmail = async (req, res, next) => {
   const email = req.body?.email;
@@ -18,14 +18,15 @@ export const verifyEmail = async (req, res, next) => {
   } catch (err) {
     return next(new ValidationError(err.errors[0]));
   }
-
-  const result = await selectUserByEmail(email);
-
-  if (!result) {
-    return res.status(404).send({ user: false, message: "User not found" });
+  try {
+    const result = await selectUserByEmail(email);
+    if (!result) {
+      return res.status(404).send({ user: false, message: "User not found" });
+    }
+    return res.status(200).send({ user: result, message: "User found" });
+  } catch (err) {
+    return next(new InternalServerError(err));
   }
-
-  return res.status(200).send({ user: result, message: "User found" });
 };
 
 //  ----------------------------------------  CREATE NEW USER  ----------------------------------------  //

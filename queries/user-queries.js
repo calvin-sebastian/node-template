@@ -11,7 +11,7 @@ export const selectUserByEmail = async (email) => {
     return result[0];
   } catch (error) {
     console.error(error);
-    return null;
+    throw error;
   }
 };
 
