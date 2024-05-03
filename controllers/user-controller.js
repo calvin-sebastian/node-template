@@ -25,7 +25,7 @@ export const verifyEmail = async (req, res, next) => {
     }
     return res.status(200).send({ user: result, message: "User found" });
   } catch (err) {
-    return next(new InternalServerError(err));
+    next(new InternalServerError(err.message));
   }
 };
 
@@ -34,12 +34,15 @@ export const verifyEmail = async (req, res, next) => {
 export const createAccount = async (req, res, next) => {
   const email = req.body?.email;
   const password = req.body?.password;
-
-  const accountExists = await selectUserByEmail(email);
-  if (accountExists) {
-    return next(
-      new ConflictError("An account already exists under this email")
-    );
+  try {
+    const accountExists = await selectUserByEmail(email);
+    if (accountExists) {
+      return next(
+        new ConflictError("An account already exists under this email")
+      );
+    }
+  } catch (err) {
+    return next(new InternalServerError(err.message));
   }
 
   try {
@@ -59,15 +62,13 @@ export const createAccount = async (req, res, next) => {
 export const login = async (req, res, next) => {
   const email = req.body?.email;
   const password = req.body?.password;
-
-  const accountExists = await selectUserByEmail(email);
-  if (!accountExists) {
-    return next(
-      new ConflictError("An account does not exist under this email")
-    );
-  }
-
   try {
+    const accountExists = await selectUserByEmail(email);
+    if (!accountExists) {
+      return next(
+        new ConflictError("An account does not exist under this email")
+      );
+    }
     const passwordsMatch = await bcrypt.compare(
       password,
       accountExists.password

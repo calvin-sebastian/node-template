@@ -10,7 +10,6 @@ export const selectUserByEmail = async (email) => {
     );
     return result[0];
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -22,8 +21,7 @@ export const selectUserById = async (id) => {
     ]);
     return result[0];
   } catch (error) {
-    console.error(error);
-    return null;
+    throw error;
   }
 };
 
@@ -37,10 +35,8 @@ export const insertNewUser = async (email, password) => {
     `,
       [email, password]
     );
-    console.log(result);
     return result[0].insertId;
   } catch (error) {
-    console.error(error);
-    return null;
+    throw error;
   }
 };
