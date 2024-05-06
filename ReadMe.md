@@ -26,15 +26,15 @@ A re-usable template for express backends
 
 ## Usage
 
-1. This template is designed as a starting point to encourage uniformity across node backends.
+- This template is designed as a starting point to encourage uniformity across node backends.
 
-2. The alt. start up scripts will initialize an env file, a database and 2 tables: one for users and one for permissions.
+- The alt. start up scripts will initialize an env file, a database and 2 tables: one for users and one for permissions.
 
-3. The backend can be used without the optional scripts, however, the user-queries are dependant on these tables and will not be functional without them.
+- The backend can be used without the optional scripts, however, the user-queries are dependant on these tables and will not be functional without them.
 
 ## Configuration
 
-- The backend can be set up manually by configuring your own .env file and setting up your database beforehand or alternate scripts are listed below for using the default configuration:
+The backend can be set up manually by configuring your own .env file and setting up your database beforehand or alternate scripts are listed below for using the default configuration:
 
 1. Initialize the env file (Optional):
    `npm run init-env`
@@ -52,11 +52,15 @@ A re-usable template for express backends
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
-Fork the Project
-Create your Feature Branch (git checkout -b feature/AmazingFeature)
-Commit your Changes (git commit -m 'Add some AmazingFeature')
-Push to the Branch (git push origin feature/AmazingFeature)
-Open a Pull Request
+- Fork the Project
+
+- Create your Feature Branch (git checkout -b feature/AmazingFeature)
+
+- Commit your Changes (git commit -m 'Add some AmazingFeature')
+
+- Push to the Branch (git push origin feature/AmazingFeature)
+
+- Open a Pull Request
 
 ## License
 
