@@ -13,9 +13,9 @@ A re-usable template for express backends
 ## Installation
 
 1. Clone the repository:
-   `git clone https://github.com/your-username/your-repository.git`
+   `git clone https://github.com/MeikoTech/node-template.git`
 
-2. Setup your .env file and database or use the default configuration scripts listed below (#configuration)
+2. Setup your .env file and database or use the default configuration scripts listed below. See [Configuration](#configuration) for details.
 
 3. Download dependancies and run:
    `npm run dev`
@@ -30,7 +30,7 @@ A re-usable template for express backends
 
 - The alt. start up scripts will initialize an env file, a database and 2 tables: one for users and one for permissions.
 
-- The backend can be used without the optional scripts, however, the user-queries are dependant on these tables and will not be functional without them.
+- The backend can be used without the optional scripts, however, the user queries are dependant on these tables and will not function properly without them.
 
 ## Configuration
 
