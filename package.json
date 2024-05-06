@@ -5,9 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "init-env": "node startup/initialize-env.js",
+    "init-db": "node startup/initialize-db.js",
+    "init-tables": "node startup/initialize-tables.js",
     "dev": "node startup/verify-packages.js && nodemon server.js",
     "start": "nodemon server.js",
-    "env": "node startup/initialize-env.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

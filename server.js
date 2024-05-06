@@ -1,13 +1,12 @@
 import express from "express";
-import { initializeTables } from "./startup/initialize-tables.js";
 import USER_ROUTES from "./routes/user-routes.js";
 import { logTable } from "./console/log-functions.js";
 import { checkDatabaseConnection } from "./startup/verify-services.js";
 import fs from "fs";
 import path from "path";
+import { headers } from "./console/log-functions.js";
 
 // Start up variables
-const headers = ["Service", "Status", "Message"];
 const services = [];
 const currentDir = process.cwd();
 const envPath = path.resolve(currentDir, ".env");
@@ -25,21 +24,35 @@ app.use((req, res, next) => {
   next();
 });
 
-// Test database connection if .env file exists otherwise prompt user to run create .env script
+/// Test database connection if .env file exists otherwise prompt user to run create .env script
 if (!fs.existsSync(envPath)) {
-  services.push([".env", "Error", "Run 'npm run env'"]);
+  logTable(headers, [
+    ".env",
+    "Error",
+    "Run 'npm run init-env' or include a .env file in the root directory of the project",
+  ]);
+  process.exit(1);
 } else {
   services.push([".env", "Active", "Using existing .env file"]);
   try {
-    const connected = await checkDatabaseConnection();
-    if (connected) {
-      services.push([...connected]);
+    await checkDatabaseConnection();
 
-      // Check database for required tables and initialize them if they dont exist
-      await initializeTables();
-    }
+    services.push([
+      "Database",
+      "Active",
+      `Connected to ${process.env.DB_NAME}`,
+    ]);
   } catch (error) {
-    console.error(error);
+    if (error.code === "ER_BAD_DB_ERROR") {
+      logTable(headers, [
+        "Database",
+        "Error",
+        "Run 'npm run init-db' or manually set up your database",
+      ]);
+      process.exit(1);
+    } else {
+      console.error(`Error connecting to database: ${error.message}`);
+    }
   }
 }
 
@@ -53,7 +66,9 @@ app.use("/user", USER_ROUTES);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  res.status(err.statusCode || 500).json({ error: err.message });
+  res.status(err.statusCode || 500).json({
+    error: err.message || "An unknown error occurred processing your request",
+  });
 });
 
 // Start the server

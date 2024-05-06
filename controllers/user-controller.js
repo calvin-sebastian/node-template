@@ -4,9 +4,14 @@ import {
   InternalServerError,
   ValidationError,
 } from "../console/error-handling.js";
-import { insertNewUser, selectUserByEmail } from "../queries/user-queries.js";
+import {
+  insertNewUser,
+  selectUserByEmail,
+  updateUserRefreshToken,
+} from "../queries/user-queries.js";
 import { emailSchema } from "../validation/user-schemas.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 //  --------------------  VALIDATE EMAIL TO REDIRECT USER TO LOGIN OR REGISTER  --------------------  //
 
@@ -20,10 +25,11 @@ export const verifyEmail = async (req, res, next) => {
   }
   try {
     const result = await selectUserByEmail(email);
+    console.log(result);
     if (!result) {
       return res.status(404).send({ user: false, message: "User not found" });
     }
-    return res.status(200).send({ user: result, message: "User found" });
+    return res.status(200).send({ user: result.email, message: "User found" });
   } catch (err) {
     next(new InternalServerError(err.message));
   }
@@ -69,28 +75,36 @@ export const login = async (req, res, next) => {
         new ConflictError("An account does not exist under this email")
       );
     }
+
+    // Confirm password
+
     const passwordsMatch = await bcrypt.compare(
       password,
       accountExists.password
     );
     if (!passwordsMatch) throw new Error("Incorrect password");
 
-    //  < ---------------------------------------------------------------------------------------------------------------  FUTURE
+    // Create authorization and refresh tokens using JWT
 
-    // generate tokens, insert them into user table, and send them back to the client
-
-    // const auth_token = generateAuthToken(accountExists.id);
-    // const refresh_token = generateRefreshToken(accountExists.id);
-
-    const updatedUser = await updateTokens(
-      accountExists.id,
-      auth_token,
-      refresh_token
+    const authToken = jwt.sign(
+      { id: accountExists.id },
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: "1h",
+      }
     );
 
+    const refreshToken = jwt.sign(
+      { id: accountExists.id },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    await updateUserRefreshToken(accountExists.id, refreshToken);
+
     return res.status(200).send({
-      auth_token: updatedUser.auth_token,
-      refresh_token: updatedUser.refresh_token,
+      auth_token: authToken,
+      refresh_token: refreshToken,
       message: "Successfully logged in",
     });
   } catch (err) {

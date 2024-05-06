@@ -1,0 +1,78 @@
+import mysql from "mysql2/promise";
+import dotenv from "dotenv";
+import { headers, logTable } from "../console/log-functions.js";
+import fs from "fs";
+import path from "path";
+import { checkDatabaseConnection } from "./verify-services.js";
+dotenv.config();
+
+const currentDir = process.cwd();
+const envPath = path.resolve(currentDir, ".env");
+
+const dbConfig = {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+};
+
+async function intializeDatabase() {
+  try {
+    if (!fs.existsSync(envPath)) {
+      logTable(headers, [
+        ".env",
+        "Error",
+        "Run 'npm run init-env' or include a .env file in the root directory of the project",
+      ]);
+      process.exit(1);
+    }
+    try {
+      const connected = await checkDatabaseConnection();
+      if (connected) {
+        logTable(headers, [
+          "Database",
+          "Active",
+          `Already connected to ${process.env.DB_NAME}`,
+        ]);
+        process.exit(0);
+      }
+    } catch (error) {
+      if (error.code === "ER_BAD_DB_ERROR") {
+        await createDatabase(dbConfig);
+      } else {
+        console.error(`Error connecting to database: ${error.message}`);
+      }
+    }
+    logTable(headers, [
+      "Database",
+      "Initialized",
+      `Created new schema: ${process.env.DB_NAME}`,
+    ]);
+    process.exit(0);
+  } catch (error) {
+    console.error(`Error creating database: ${error.message}`);
+    process.exit(1);
+  }
+}
+
+async function createDatabase(dbConfig) {
+  let connection;
+  try {
+    connection = await mysql.createConnection({
+      host: dbConfig.host,
+      user: dbConfig.user,
+      password: dbConfig.password,
+    });
+    await connection.query(
+      `CREATE DATABASE IF NOT EXISTS ${dbConfig.database}`
+    );
+  } catch (error) {
+    throw new Error(`Error creating database: ${error.message}`);
+  } finally {
+    if (connection) {
+      connection.end();
+    }
+  }
+}
+
+intializeDatabase();

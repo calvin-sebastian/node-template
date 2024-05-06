@@ -1,6 +1,8 @@
 import Table from "cli-table3";
 import chalk from "chalk";
 
+export const headers = ["Service", "Status", "Message"];
+
 export function logTable(headers, ...rows) {
   // Create a new table with the provided headers
   const table = new Table({
