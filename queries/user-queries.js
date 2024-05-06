@@ -16,9 +16,7 @@ export const selectUserByEmail = async (email) => {
 
 export const selectUserById = async (id) => {
   try {
-    const [result] = await pool.query(`SELECT email FROM users WHERE id = ?`, [
-      id,
-    ]);
+    const [result] = await pool.query(`SELECT * FROM users WHERE id = ?`, [id]);
     return result[0];
   } catch (error) {
     throw error;

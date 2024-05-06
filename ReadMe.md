@@ -15,7 +15,7 @@ A re-usable template for express backends
 1. Clone the repository:
    `git clone https://github.com/your-username/your-repository.git`
 
-2. Setup your .env file and database or use the default configuration scripts listed below [Configuration]
+2. Setup your .env file and database or use the default configuration scripts listed below (#configuration)
 
 3. Download dependancies and run:
    `npm run dev`

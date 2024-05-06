@@ -7,6 +7,7 @@ import {
 import {
   insertNewUser,
   selectUserByEmail,
+  selectUserById,
   updateUserRefreshToken,
 } from "../queries/user-queries.js";
 import { emailSchema } from "../validation/user-schemas.js";
@@ -102,10 +103,51 @@ export const login = async (req, res, next) => {
 
     await updateUserRefreshToken(accountExists.id, refreshToken);
 
+    // Set refresh token as HttpOnly cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expires after 7 days
+    });
+
     return res.status(200).send({
       auth_token: authToken,
-      refresh_token: refreshToken,
       message: "Successfully logged in",
+    });
+  } catch (err) {
+    next(new InternalServerError(err.message));
+  }
+};
+
+//  ----------------------------------------  REFRESH ACCESS TOKEN  ----------------------------------------  //
+
+export const refreshToken = async (req, res, next) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    return next(new ValidationError("Refresh token not found"));
+  }
+
+  try {
+    // Verify refresh token
+    const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+    // Check if the refresh token exists in the database
+    const user = await selectUserById(payload.id);
+    if (user.refreshToken !== refreshToken) {
+      throw new Error("Invalid refresh token");
+    }
+
+    // Create new access token
+    const authToken = jwt.sign(
+      { id: user.id },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    return res.status(200).send({
+      auth_token: authToken,
+      message: "Successfully refreshed access token",
     });
   } catch (err) {
     next(new InternalServerError(err.message));

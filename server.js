@@ -5,6 +5,7 @@ import { checkDatabaseConnection } from "./startup/verify-services.js";
 import fs from "fs";
 import path from "path";
 import { headers } from "./console/log-functions.js";
+import { authenticateToken } from "./middleware/auth-middleware.js";
 
 // Start up variables
 const services = [];
@@ -56,13 +57,16 @@ if (!fs.existsSync(envPath)) {
   }
 }
 
+// User routes
+app.use("/user", USER_ROUTES);
+
+// JWT authentication middleware
+app.use(authenticateToken);
+
 // Test Route
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
-
-// User routes
-app.use("/user", USER_ROUTES);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

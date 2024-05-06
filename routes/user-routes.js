@@ -3,6 +3,7 @@ import {
   createAccount,
   verifyEmail,
   login,
+  refreshToken,
 } from "../controllers/user-controller.js";
 import {
   validateCreateAccount,
@@ -11,6 +12,12 @@ import {
 } from "../validation/user-validation.js";
 
 const USER_ROUTES = express.Router();
+
+// GET Routes
+
+USER_ROUTES.get("/refresh-token", refreshToken);
+
+// POST Routes
 
 USER_ROUTES.post("/", validateEmail, verifyEmail);
 
