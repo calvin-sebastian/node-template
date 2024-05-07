@@ -57,7 +57,7 @@ if (!fs.existsSync(envPath)) {
   }
 }
 
-// User routes
+// Unauthenticated user routes
 app.use("/user", USER_ROUTES);
 
 // JWT authentication middleware

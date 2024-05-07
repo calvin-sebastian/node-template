@@ -6,8 +6,12 @@ import path from "path";
 import { checkDatabaseConnection } from "./verify-services.js";
 dotenv.config();
 
+// Define path to environment variables
+
 const currentDir = process.cwd();
 const envPath = path.resolve(currentDir, ".env");
+
+// Define the database configuration using environment variables
 
 const dbConfig = {
   host: process.env.DB_HOST,
@@ -17,6 +21,7 @@ const dbConfig = {
 };
 
 async function intializeDatabase() {
+  // Check if the .env file exists and prompt user to create one if it doesnt
   try {
     if (!fs.existsSync(envPath)) {
       logTable(headers, [
@@ -26,6 +31,7 @@ async function intializeDatabase() {
       ]);
       process.exit(1);
     }
+    // Check if the database connection is active and if it isnt, create a new database
     try {
       const connected = await checkDatabaseConnection();
       if (connected) {

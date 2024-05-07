@@ -26,7 +26,9 @@ export const verifyEmail = async (req, res, next) => {
   }
   try {
     const result = await selectUserByEmail(email);
-    console.log(result);
+
+    // Verify user does not exist and send back result to redirect user to login or register based on result
+
     if (!result) {
       return res.status(404).send({ user: false, message: "User not found" });
     }
@@ -51,6 +53,8 @@ export const createAccount = async (req, res, next) => {
   } catch (err) {
     return next(new InternalServerError(err.message));
   }
+
+  // Encrypt password and insert new user into database
 
   try {
     const hash = await encryptPassword(password);

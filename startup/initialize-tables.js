@@ -64,7 +64,7 @@ export async function initializeTables() {
     process.exit(1);
   }
 
-  // Execute all queries in parallel
+  // Create all tables in parallel
 
   const results = await Promise.all(
     initializationQueries.map(async ({ table, query }) => {
@@ -77,7 +77,6 @@ export async function initializeTables() {
             : "Table already exists";
         return [table, status, message];
       } catch (err) {
-        // If an error occurred, return an object with the table name and error status
         return [
           table,
           "Error",
@@ -87,7 +86,6 @@ export async function initializeTables() {
     })
   );
 
-  // Display the results in a table
   logTable(["Table", "Status"], ...results);
   process.exit(0);
 }

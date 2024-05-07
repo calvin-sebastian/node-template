@@ -5,6 +5,8 @@ import {
   loginSchema,
 } from "./user-schemas.js";
 
+// Validation functions for user routes
+
 export const validateEmail = async (req, res, next) => {
   try {
     await emailSchema.validate(req.body.email);

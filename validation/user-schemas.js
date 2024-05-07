@@ -1,5 +1,7 @@
 import * as yup from "yup";
 
+// Validation schemas for user routes
+
 export const emailSchema = yup.string().email();
 
 export const loginSchema = yup.object().shape({
