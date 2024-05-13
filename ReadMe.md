@@ -13,14 +13,16 @@ A re-usable template for express backends
 ## Installation
 
 1. Use the repository as a template:
-   at the top of this page, click on the button labelled `Use this template`
+   at the top of this page, click on the button labelled `Use this template`.
 
-2. Setup your .env file and database or use the default configuration scripts listed below. See [Configuration](#configuration) for details.
+2. Create a new repository by filling out the necessary fields and clicking the button at the bottom labelled `Create repository`.
 
-3. Download dependancies and run:
+3. Setup your .env file and database or use the default configuration scripts listed below. See [Configuration](#configuration) for details.
+
+4. Download dependancies and run:
    `npm run dev`
 
-4. or install packages manually and run:
+5. or install packages manually and run:
    `npm install`
    `npm start`
 
