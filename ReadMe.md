@@ -12,8 +12,8 @@ A re-usable template for express backends
 
 ## Installation
 
-1. Clone the repository:
-   `git clone https://github.com/MeikoTech/node-template.git`
+1. Use the repository as a template:
+   at the top of this page, click on the button labelled `Use this template`
 
 2. Setup your .env file and database or use the default configuration scripts listed below. See [Configuration](#configuration) for details.
 
@@ -28,6 +28,8 @@ A re-usable template for express backends
 
 - This template is designed as a starting point to encourage uniformity across node backends.
 
+- The full functionality of this repo requires mysql being installed beforehand.
+
 - The alt. start up scripts will initialize an env file, a database and 2 tables: one for users and one for permissions.
 
 - The backend can be used without the optional scripts, however, the user queries are dependant on these tables and will not function properly without them.
@@ -40,10 +42,10 @@ The backend can be set up manually by configuring your own .env file and setting
    `npm run init-env`
 
 2. Initialize the test database (Optional):
-   `npm run init-db`
+   `npm run init-db` (change the DB_NAME in the .env file to desired name before running this script)
 
 3. Initialize the user and permissions tables (Optional):
-   `npm run init-tables`
+   `npm run init-tables` (change the databaseTables variable in the initialize-tables.js file to desired table configurations before running this script)
 
 4. Download dependancies and run
    `npm run dev`

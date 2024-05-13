@@ -6,6 +6,7 @@ import fs from "fs";
 import path from "path";
 import { headers } from "./console/log-functions.js";
 import { authenticateToken } from "./middleware/auth-middleware.js";
+import corsPolicy from "./config/cors.js";
 
 // Start up variables
 const services = [];
@@ -18,6 +19,9 @@ const app = express();
 
 // JSON body parsing middleware
 app.use(express.json());
+
+// Add CORS policy here
+app.use(corsPolicy);
 
 // Route tracking middleware
 app.use((req, res, next) => {

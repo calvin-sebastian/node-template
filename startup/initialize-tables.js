@@ -11,7 +11,7 @@ const envPath = path.resolve(currentDir, ".env");
 
 // Define the initialization queries for each table
 
-const initializationQueries = [
+const databaseTables = [
   {
     table: "users",
     query: `CREATE TABLE IF NOT EXISTS users (
@@ -67,7 +67,7 @@ export async function initializeTables() {
   // Create all tables in parallel
 
   const results = await Promise.all(
-    initializationQueries.map(async ({ table, query }) => {
+    databaseTables.map(async ({ table, query }) => {
       try {
         const [result] = await pool.execute(query);
         const status = result.warningStatus === 0 ? "Initialized" : "Active";
