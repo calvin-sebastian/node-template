@@ -17,7 +17,7 @@ A re-usable template for express backends
 
 2. Create a new repository by filling out the necessary fields and clicking the button at the bottom labelled `Create repository`.
 
-3. Setup your .env file and database or use the default configuration scripts listed below. See [Configuration](#configuration) for details.
+3. Setup your .env file and database or use the configuration scripts listed below. See [Configuration](#configuration) for details.
 
 4. Download dependancies and run:
    `npm run dev`
@@ -28,13 +28,15 @@ A re-usable template for express backends
 
 ## Usage
 
-- This template is designed as a starting point to encourage uniformity across node backends.
+- This template is designed as a starting point to encourage uniformity across express backends.
 
-- The full functionality of this repo requires mysql being installed beforehand.
+- The full functionality of this repo requires mysql being installed and setup beforehand.
 
 - The alt. start up scripts will initialize an env file, a database and 2 tables: one for users and one for permissions.
 
 - The backend can be used without the optional scripts, however, the user queries are dependant on these tables and will not function properly without them.
+
+- The routes that exist through use of the scripts may need further customization to work for your application's intention and should be used as a reference while building additional endpoints
 
 ## Configuration
 
